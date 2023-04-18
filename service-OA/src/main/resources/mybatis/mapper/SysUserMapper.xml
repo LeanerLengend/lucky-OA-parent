@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lucky.oa.mapper.SysUserMapper">
+
+<!--   List<SysUser> page(@Param("sysUserQueryVo") SysUserQueryVo sysUserQueryVo);-->
+    <select id="page" resultType="SysUser">
+        select * from sys_user
+            where is_deleted = 0
+                <if test=" sysUserQueryVo != null and sysUserQueryVo.keyword != null ">
+                    and username like "%"#{sysUserQueryVo.keyword}"%"
+                </if>
+    </select>
+
+<!--    int save( SysUser SysUser);-->
+    <insert id="save">
+        insert into sys_user(username,password,name,phone,create_time)
+            values(#{username},#{password},#{name},#{phone},CURRENT_TIMESTAMP())
+    </insert>
+
+
+<!-- SysUser getById(Integer id);-->
+    <select id="getById" resultType="SysUser">
+        select * from sys_user where  id = #{id} and is_deleted = 0
+    </select>
+
+<!--    Boolean removeById(Integer id);-->
+    <update id="removeById" >
+        update sys_user set is_deleted = 1 where  id = #{id}
+    </update>
+
+<!--    int removeByIds( List<Integer> ids); -->
+    <update id="removeByIds" >
+        update sys_user set is_deleted = 1 where id in (
+            <foreach collection="ids" separator="," item="id">
+                #{id}
+            </foreach>
+            )
+    </update>
+
+<!--    Boolean updateById(SysUser sysUser);-->
+    <update id="updateById" keyProperty="id" useGeneratedKeys="true">
+        update sys_user
+            set username = #{username},
+                password = #{password},
+                phone = #{phone}
+            where id = #{id}
+    </update>
+
+
+<!--    // 启用或者禁用用户-->
+<!--     int enableOrDisable(@Param("userId")Long userId,@Param("status")Integer status);-->
+    <update id="enableOrDisable" >
+        update sys_user set status = #{status}
+        where id = #{userId}
+    </update>
+
+
+<!--    SysUser getUserByUsernameAndPWD(@Param("username")String username,@Param("password")String  password);-->
+    <select id="getUserByUsernameAndPWD" resultType="sysUser">
+        select *
+        from sys_user
+        where is_deleted = 0
+          and username = #{username}
+          and password = #{password}
+    </select>
+
+
+<!--    // 根据用户名查询是否有当前用户-->
+<!--    Integer getUserByUserName(@Param("username")String username);-->
+    <select id="getUserByUserName" resultType="int">
+        select count(*)
+        from  sys_user
+        where
+          username = #{username}
+          and is_deleted = 0
+    </select>
+
+
+<!--    // 根据用户名查询用户-->
+<!--    SysUser getUserEntityByUserName(@Param("username")String username);-->
+    <select id="getUserEntityByUserName" resultType="sysUser">
+        select *
+        from  sys_user
+        where
+            username = #{username}
+          and is_deleted = 0
+    </select>
+
+</mapper>

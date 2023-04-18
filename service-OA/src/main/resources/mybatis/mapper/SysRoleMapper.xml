@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lucky.oa.mapper.SysRoleMapper">
+
+    <!--List<SysRole> getAllSysRole();-->
+    <select id="getAllSysRole" resultType="sysRole">
+        select * from sys_role where is_deleted = 0
+    </select>
+
+<!--    List<SysRole> page(@Param("sysRoleQueryVo") SysRoleQueryVo sysRoleQueryVo);-->
+    <select id="page" resultType="sysRole">
+        select * from sys_role
+            where is_deleted = 0
+              <if test=" sysRoleQueryVo != null and sysRoleQueryVo.roleName != null ">
+                  and role_name like "%"#{sysRoleQueryVo.roleName}"%"
+              </if>
+    </select>
+
+<!--    int save(@Param("sysRole") SysRole sysRole);-->
+    <insert id="save" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_role(role_name,role_code,create_time,is_deleted)
+                    values(#{roleName},#{roleCode},CURRENT_TIMESTAMP(),0)
+    </insert>
+
+<!--    SysRole getById(@Param("id")Integer id);-->
+    <select id="getById" resultType="SysRole">
+        select * from sys_role where   id = #{id} and is_deleted = 0
+    </select>
+
+<!--    Integer removeById(@Param("id")Integer id);-->
+    <update id="removeById" >
+        update sys_role set is_deleted = 1 where  id = #{id}
+    </update>
+
+<!--    Integer removeByIds(@Param("list") String ids);-->
+    <update id="removeByIds" >
+        update sys_role set is_deleted = 1 where id in (
+            <foreach collection="list" item="id" separator=",">
+                #{id}
+            </foreach>
+            )
+    </update>
+
+<!--    Integer updateById(@Param("sysRole")SysRole sysRole);-->
+    <update id="updateById" >
+        update sys_role set role_name = #{roleName},role_code=#{roleCode},update_time=CURRENT_TIMESTAMP() where id =#{id}
+    </update>
+</mapper>
