@@ -1,6 +1,6 @@
 package com.lucky.vo.process;
 
-import io.swagger.annotations.ApiModelProperty;
+
 import lombok.Data;
 
 @Data
@@ -10,9 +10,9 @@ public class ApprovalVo {
 
     private String taskId;
 
-    @ApiModelProperty(value = "状态")
+
     private Integer status;
 
-    @ApiModelProperty(value = "审批描述")
+
     private String description;
 }

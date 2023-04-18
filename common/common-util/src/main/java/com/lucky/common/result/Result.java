@@ -1,8 +1,6 @@
-package com.lucky.common;
+package com.lucky.common.result;
 
 import lombok.Data;
-
-import java.util.Map;
 
 /**
  * 创建结果

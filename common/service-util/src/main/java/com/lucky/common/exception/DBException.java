@@ -1,6 +1,6 @@
 package com.lucky.common.exception;
 
-import io.swagger.models.auth.In;
+
 import lombok.Data;
 
 /**

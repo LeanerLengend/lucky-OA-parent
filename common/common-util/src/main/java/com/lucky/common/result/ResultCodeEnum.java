@@ -1,4 +1,4 @@
-package com.lucky.common;
+package com.lucky.common.result;
 
 import lombok.Getter;
 

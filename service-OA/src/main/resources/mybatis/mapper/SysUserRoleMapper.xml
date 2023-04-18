@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lucky.oa.mapper.SysUserRoleMapper">
+
+
+<!--    //移除用户的所有角色-->
+<!--    Integer removeRolesForUserById(@Param("id") Long id);-->
+    <update id="removeRolesForUserById" >
+        update sys_user_role
+            set is_deleted = 1
+        where user_id = #{id}
+    </update>
+
+
+
+<!--    // 为用户分配角色-->
+<!--   Integer assignRoles(@Param("userId") Integer userId, @Param("ids") List<Integer> ids); -->
+    <insert id="assignRoles" >
+        insert into sys_user_role (role_id,user_id,create_time,update_time) values
+            <foreach collection="ids" item="id" separator=",">
+                (#{id},#{userId},CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP())
+            </foreach>
+    </insert>
+
+
+
+    <resultMap id="userAndRoles" type="sysUser">
+        <id property="id" column="u_id" ></id>
+        <collection property="roleList" ofType="sysRole">
+            <id property="id" column="r_id"></id>
+            <result property="roleName" column="role_name"></result>
+            <result property="roleCode" column="role_code"></result>
+        </collection>
+    </resultMap>
+
+<!--    SysUser getRolesByUserId();-->
+    <select id="getRolesByUserId" resultMap="userAndRoles">
+        SELECT
+            u.id u_id,
+            r.id r_id,
+            r.role_name,
+            r.role_code
+        FROM
+            sys_user u
+        LEFT JOIN
+            sys_user_role ur
+          ON
+            u.id = ur.user_id
+        LEFT JOIN
+            sys_role r
+          ON
+            ur.role_id = r.id
+        WHERE
+              user_id = #{id}
+          and r.is_deleted = 0
+    </select>
+
+
+</mapper>

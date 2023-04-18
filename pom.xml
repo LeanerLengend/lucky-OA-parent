@@ -30,15 +30,24 @@
         <jwt.version>0.9.1</jwt.version>
         <fastjson.version>2.0.21</fastjson.version>
         <Druid.version>1.1.17</Druid.version>
+        <pagehelper.version>5.2.0</pagehelper.version>
     </properties>
     <!--配置dependencyManagement锁定依赖的版本-->
     <dependencyManagement>
-        <!--mybatis-plus 持久层-->
+
         <dependencies>
+
+            <!--分页相关的-->
             <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+            <!-- 开发web场景相关的 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>2.3.6.RELEASE</version>
             </dependency>
             <!--mysql-->
             <dependency>
@@ -46,12 +55,7 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
-            <!--knife4j-->
-            <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
-            </dependency>
+
             <!--jjwt-->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
