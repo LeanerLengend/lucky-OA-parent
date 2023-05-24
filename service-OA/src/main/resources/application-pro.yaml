@@ -11,11 +11,7 @@ mybatis:
     map-underscore-to-camel-case: true
 
 # 微信公众号模式
-wechat:
-  mpAppId: wx91dc53ac833139e7
-  mpAppSecret: 6b2def641e1bd1d799bdc8fe7c96c174
-  # 不是微信刻意规定的，用户点了同意之后，调用的接口地址
-  # userInfoUrl: http://1ao5msve.shenzhuo.vip:50999/admin/wechat/userInfo
+
 
   userInfoUrl: http://8.140.60.3:8080/admin/wechat/userInfo
   # '#' 传输有问题，所以用一个字符串来代替#
@@ -38,7 +34,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/luckyoadb?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8&allowPublicKeyRetrieval=true
     username: root
-    password: Chenyingxiang18.
+    password: xxxxxxx
   mvc:
     # 内容协商，自定义浏览器接收类型，通过参数format
     # contentnegotiation:
