@@ -13,7 +13,6 @@ public class ProcessVo {
 
 	private Date createTime;
 
-
 	private String processCode;
 
 

@@ -25,6 +25,8 @@ public class SysRoleServiceTest {
     @Resource
     private  SysMenuService sysMenuService;
 
+
+
     @Test
     public void testService(){
         List<SysMenu> sysMenuListByParentId = sysMenuService.getSysMenuListByParentId(2L);

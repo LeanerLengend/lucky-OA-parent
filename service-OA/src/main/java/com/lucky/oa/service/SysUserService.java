@@ -2,12 +2,9 @@ package com.lucky.oa.service;
 
 
 import com.github.pagehelper.PageInfo;
-import com.lucky.model.system.SysRole;
 import com.lucky.model.system.SysUser;
 import com.lucky.vo.system.LoginVo;
-import com.lucky.vo.system.SysRoleQueryVo;
 import com.lucky.vo.system.SysUserQueryVo;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +14,17 @@ import java.util.Map;
  * @create 2023-03-16 20:08
  */
 public interface SysUserService  {
+
+    SysUser getByPhoneNum(String phone);
+
+    SysUser getSysUserByOpenId(String openId);
+
+    /**
+     * 仅做到返回真实姓名和，电话号码
+     * @return
+     */
+    Map<String ,Object> getCurrentUser();
+
     // 根据条件分页查询
     PageInfo<SysUser> page(SysUserQueryVo sysUserQueryVo,Integer page,Integer limit);
 

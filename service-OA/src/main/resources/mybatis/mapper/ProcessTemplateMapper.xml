@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lucky.oa.mapper.ProcessTemplateMapper">
+
+<!--    // 分页查询  较复杂原因因为 需要两张表联查一个字段 -->
+<!--    List<ProcessTemplate> list();-->
+        <select id="list" resultType="processTemplate">
+            select t1.*, t2.name processTypeName
+            from
+                oa_process_template t1
+            INNER JOIN
+                oa_process_type t2
+            ON
+                t1.process_type_id = t2.id
+            where t1.is_deleted = 0
+                and t2.is_deleted = 0
+        </select>
+
+<!--    // 根据id查询审批类型-->
+<!--    ProcessTemplate getProcessTemplateById(@Param("id")Long id);-->
+        <select id="getProcessTemplateById" resultType="processTemplate">
+            select * from  oa_process_template where id = #{id} and is_deleted = 0
+        </select>
+
+<!--    // 增删改查-->
+<!--    Integer add(ProcessTemplate processTemplate);-->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+
+    insert
+        into
+            oa_process_template(name,description,icon_url,process_type_id,form_props,form_options,process_definition_key,process_definition_path,process_model_id)
+    values
+           (#{name},#{description},#{iconUrl},#{processTypeId},#{formProps},#{formOptions},#{processDefinitionKey},#{processDefinitionPath},#{processModelId})
+</insert>
+
+<!--    Integer delete(@Param("id")Long id);-->
+    <update id="delete" >
+        update oa_process_template set is_deleted = 1 where id = #{id}
+    </update>
+
+<!--    Integer update(ProcessTemplate processTemplate);-->
+    <update id="update">
+        update
+            oa_process_template
+        set
+            name = #{name},
+            description = #{description},
+            icon_url = #{iconUrl},
+            process_type_id = #{processTypeId},
+            form_props = #{formProps},
+            form_options = #{formOptions},
+            process_definition_key = #{processDefinitionKey},
+            process_definition_path = #{processDefinitionPath},
+            process_model_id = #{processModelId},
+            status = #{status}
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -5,7 +5,6 @@ import com.lucky.springsecurity.filter.TokenAuthenticationFilter;
 import com.lucky.springsecurity.filter.TokenLoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import javax.annotation.Resource;
 
 /**
@@ -68,6 +68,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // 指定某些接口不需要通过验证即可访问。登陆接口肯定是不需要认证的
                 .antMatchers("/admin/system/index/login").permitAll()
+                // 试一试
+                .antMatchers("/admin/wechat/authorize").permitAll()
+                .antMatchers("/admin/wechat/userInfo").permitAll()
+                .antMatchers("/admin/wechat/bindPhone").permitAll()
                 // 这里意思是其它所有接口需要认证才能访问
                 .anyRequest().authenticated()
                 .and()
@@ -100,6 +104,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/favicon.ico","/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/doc.html");
+        web.ignoring().antMatchers(
+                "/admin/modeler/**",
+                "/diagram-viewer/**",
+                "/editor-app/**",
+                "/*.html",
+                "/admin/processImage/**",
+                "/admin/wechat/authorize",
+                "/admin/wechat/userInfo",
+                "/admin/wechat/bindPhone",
+                "/favicon.ico",
+                "/swagger-resources/**",
+                "/webjars/**",
+                "/v2/**",
+                "/swagger-ui.html/**",
+                "/doc.html");
     }
 }

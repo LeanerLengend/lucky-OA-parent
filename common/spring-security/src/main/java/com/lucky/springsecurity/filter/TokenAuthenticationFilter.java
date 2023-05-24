@@ -1,14 +1,13 @@
 package com.lucky.springsecurity.filter;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.lucky.common.jwt.JwtHelper;
 import com.lucky.common.result.ResponseUtil;
 import com.lucky.common.result.Result;
 import com.lucky.common.result.ResultCodeEnum;
+import com.lucky.springsecurity.custom.LoginUserInfoHelper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -20,7 +19,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -68,9 +66,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         if (!StringUtils.isEmpty(token)) {
             String username = JwtHelper.getUsername(token);
             if (!StringUtils.isEmpty(username)) {
-
                 // 从Redis里面取到授权信息,当时放的json数据，所以在这里要转化一下
                 String o = (String)redisTemplate.opsForValue().get(username);
+                // 往线程中丢用户的id
+                LoginUserInfoHelper.setUserId(JwtHelper.getUserId(token));
+                // 把用户的名称对劲线程中
+                LoginUserInfoHelper.setUsername(username);
                 List<SimpleGrantedAuthority> authorities = null;
                 if(!StringUtils.isEmpty(o)){
                     authorities = JSON.parseArray(o,SimpleGrantedAuthority.class);

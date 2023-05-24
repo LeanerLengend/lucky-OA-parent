@@ -1,13 +1,13 @@
 package com.lucky.oa.controller;
+
 import com.lucky.common.exception.UserOperateException;
-import com.lucky.common.jwt.JwtHelper;
 import com.lucky.common.result.Result;
-import com.lucky.model.system.SysUser;
 import com.lucky.oa.service.SysMenuService;
 import com.lucky.oa.service.SysUserService;
 import com.lucky.vo.system.LoginVo;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -52,7 +52,6 @@ public class IndexController {
     @GetMapping("/info")
     public Result info(HttpServletRequest request) {
         String token = request.getHeader("token");
-
         if(token == null){
             throw  new UserOperateException("请先登录！");
         }

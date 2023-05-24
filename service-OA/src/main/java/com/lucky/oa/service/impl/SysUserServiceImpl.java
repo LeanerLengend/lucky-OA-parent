@@ -1,31 +1,23 @@
 package com.lucky.oa.service.impl;
 
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lucky.common.exception.UserOperateException;
 import com.lucky.common.jwt.JwtHelper;
 import com.lucky.common.utils.MD5Helper;
-import com.lucky.model.system.SysMenu;
 import com.lucky.model.system.SysRole;
 import com.lucky.model.system.SysUser;
-import com.lucky.oa.mapper.SysRoleMapper;
 import com.lucky.oa.mapper.SysUserMapper;
-import com.lucky.oa.mapper.SysUserRoleMapper;
 import com.lucky.oa.service.SysMenuService;
 import com.lucky.oa.service.SysRoleService;
 import com.lucky.oa.service.SysUserRoleService;
 import com.lucky.oa.service.SysUserService;
+import com.lucky.springsecurity.custom.LoginUserInfoHelper;
 import com.lucky.vo.system.LoginVo;
 import com.lucky.vo.system.RouterVo;
 import com.lucky.vo.system.SysUserQueryVo;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -87,6 +79,26 @@ public class SysUserServiceImpl  implements SysUserService {
         HashMap<String, Object> map = new HashMap<>();
         map.put("assginRoleList",haveRoles);
         map.put("allRolesList",sysRoleService.getAllSysRole());
+        return map;
+    }
+
+
+    @Override
+    public SysUser getByPhoneNum(String phone) {
+        return sysUserMapper.getPhoneNum(phone);
+    }
+
+    @Override
+    public SysUser getSysUserByOpenId(String openId) {
+        return sysUserMapper.getSysUserByOpenId(openId);
+    }
+
+    @Override
+    public Map<String, Object> getCurrentUser() {
+        SysUser sysUser = this.getById(LoginUserInfoHelper.getUserId());
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", sysUser.getName());
+        map.put("phone", sysUser.getPhone());
         return map;
     }
 

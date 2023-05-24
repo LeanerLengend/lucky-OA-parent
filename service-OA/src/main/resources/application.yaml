@@ -2,5 +2,5 @@ spring:
   application:
     name: luck-oa
   profiles:
-    active: dev
+    active: pro
 

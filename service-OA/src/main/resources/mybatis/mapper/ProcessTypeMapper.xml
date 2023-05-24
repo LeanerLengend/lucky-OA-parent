@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lucky.oa.mapper.ProcessTypeMapper">
+
+
+<!--    // 分页查询-->
+<!--    List<ProcessType> list();-->
+    <select id="list" resultType="processType">
+        select * from oa_process_type where is_deleted = 0
+    </select>
+
+
+<!--    // 根据id查询审批类型-->
+<!--    ProcessType getProcessTypeById(@Param("id")Long id);-->
+    <select id="getProcessTypeById" resultType="processType">
+        select * from oa_process_type where is_deleted = 0 and id = #{id}
+    </select>
+
+
+<!--    // 增删改查-->
+<!--    Integer add(ProcessType processType);-->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into oa_process_type(name,description) values(#{name} ,#{description})
+    </insert>
+
+
+<!--    Integer delete(@Param("id")Long id);-->
+    <update id="delete">
+        update oa_process_type set is_deleted = 1 where id = #{id} and is_deleted = 0
+    </update>
+
+
+
+<!--    Integer update(ProcessType processType);-->
+    <update id="update">
+        update oa_process_type
+        set
+            name = #{name},
+            description = #{description} ,
+            update_time = CURRENT_TIMESTAMP()
+        where id = #{id}
+    </update>
+
+</mapper>

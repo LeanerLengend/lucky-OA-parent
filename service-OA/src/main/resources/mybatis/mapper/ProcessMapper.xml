@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lucky.oa.mapper.ProcessMapper">
+
+<!--    // 条件查询 name : 模糊查询名称 ，-->
+<!--    List<ProcessVo> page(ProcessQueryVo processQueryVo);-->
+    <select id="page" resultType="com.lucky.vo.process.ProcessVo">
+        SELECT
+            p.*,
+            u.`name` ,
+            ptem.`name`  processTemplateName ,
+            ptype.`name` processTypeName
+        FROM
+            oa_process p
+                LEFT JOIN sys_user u
+                          ON p.user_id = u.id
+                LEFT JOIN oa_process_template ptem
+                          ON p.process_template_id = ptem.id
+                LEFT JOIN oa_process_type ptype
+                          ON p.process_type_id = ptype.id
+        <where>
+            p.is_deleted = 0
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    p.process_code LIKE "%"#{keyword}"%"  OR
+                    p.title LIKE "%"#{keyword}"%"  OR
+                    u.phone LIKE "%"#{keyword}"%"  OR
+                    u.`name` LIKE "%"#{keyword}"%"
+                )
+            </if>
+            <if test="status != null">
+                AND  p.`status` = #{status}
+            </if>
+            <if test="createTimeBegin != null and createTimeBegin != ''">
+                AND  p.create_time >= #{createTimeBegin}
+            </if>
+            <if test="createTimeBegin != null and createTimeBegin != ''">
+                -- 用于转义成小于号   小于=  - 不灵光头脑的笔记！
+                AND  p.create_time &lt;= #{createTimeBegin}
+            </if>
+            <if test="userId != null and userId != ''">
+                -- 用于转义成小于号   小于=  - 不灵光头脑的笔记！
+                AND  p.user_id = #{userId}
+            </if>
+        </where>
+        ORDER BY
+            create_time DESC
+    </select>
+
+
+<!--    // 根据id查询详细信息-->
+<!--    ProcessVo queryProcessVoByProcessId(Long id);-->
+    <select id="queryProcessVoByProcessId" resultType="com.lucky.vo.process.ProcessVo">
+        SELECT
+            p.*,
+            u.`name` ,
+            ptem.`name`  processTemplateName ,
+            ptype.`name` processTypeName
+        FROM
+            oa_process p
+        LEFT JOIN sys_user u
+            ON p.user_id = u.id
+        LEFT JOIN oa_process_template ptem
+            ON p.process_template_id = ptem.id
+        LEFT JOIN oa_process_type ptype
+            ON p.process_type_id = ptype.id
+        where
+            p.is_deleted = 0
+          AND
+            p.id = #{id}
+    </select>
+    
+
+<!--    // 查询审批类型，审批类型包含的审批模板-->
+<!--    List<ProcessType> getAllProcessTypeAndTemplate();-->
+    <select id="getAllProcessTypeAndTemplate" resultMap="processTypeAndTemplate">
+        SELECT
+            # 审批类型信息
+            ptype.id,ptype.`name`,ptype.description,
+            # 审批模板信息
+            ptemp.id pid, ptemp.`name` pname,ptemp.description pdesc,
+            ptemp.icon_url,ptemp.process_type_id,ptemp.form_props,ptemp.process_definition_key,
+            ptemp.process_definition_path,ptemp.process_model_id,ptemp.status,ptemp.create_time,ptemp.update_time,ptemp.is_deleted
+        FROM
+            oa_process_template ptemp
+                LEFT JOIN oa_process_type  ptype
+                          ON ptemp.process_type_id = ptype.id
+        where
+            ptemp.is_deleted = 0
+            AND
+            ptype.is_deleted = 0
+    </select>
+
+    <!--一对多映射-->
+    <resultMap id="processTypeAndTemplate" type="ProcessType">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="description" column="description"></result>
+        <collection property="processTemplateList" ofType="ProcessTemplate" >
+            <id property="id" column="pid"></id>
+            <result property="name" column="pname"></result>
+            <result property="description" column="pdesc"></result>
+            <result property="iconUrl" column="icon_url"></result>
+            <result property="processTypeId" column="process_type_id"></result>
+            <result property="formProps" column="form_props"></result>
+            <result property="processDefinitionKey" column="process_definition_key"></result>
+            <result property="processDefinitionPath" column="process_definition_path"></result>
+            <result property="status" column="status"></result>
+            <result property="createTime" column="create_time"></result>
+        </collection>
+    </resultMap>
+
+
+<!--    // 添加审批信息-->
+<!--    Integer save(Process process);-->
+    <insert id="save" keyProperty="id" useGeneratedKeys="true">
+        insert into
+            oa_process(
+               process_code,user_id,process_template_id,process_type_id,
+               title,description,form_values,process_instance_id,current_auditor,status
+            )
+        values(
+               #{processCode},#{userId},#{processTemplateId},#{processTypeId},
+               #{title},#{description},#{formValues},#{processInstanceId},#{currentAuditor},#{status}
+        )
+    </insert>
+
+
+<!--    // 修改审批信息-->
+<!--    Integer update(Process process);-->
+    <update id="update" >
+        update
+            oa_process
+        set
+            process_code = #{processCode},
+            user_id = #{userId},
+            process_template_id = #{processTemplateId},
+            process_type_id = #{processTypeId},
+            title = #{title},
+            description = #{description},
+            form_values = #{formValues},
+            process_instance_id = #{processInstanceId},
+            current_auditor = #{currentAuditor},
+            status = #{status},
+            update_time = CURRENT_TIMESTAMP()
+        where
+            id = #{id}
+    </update>
+
+
+<!--    // 根据id查询指定的流程信息-->
+<!--    Process getProcessById(Long id);-->
+    <select id="getProcessById" resultType="process">
+        select
+               *
+        from
+             oa_process
+        where
+             id = #{id}
+    </select>
+
+
+<!--    // 根据指定的流程实例id查询流程-->
+<!--    Process getProcessByProcessInstanceId(String instanceId);-->
+    <select id="getProcessByProcessInstanceId" resultType="process">
+        select
+            *
+        from
+            oa_process
+        where
+            process_instance_id = #{instanceId}
+    </select>
+
+
+</mapper>

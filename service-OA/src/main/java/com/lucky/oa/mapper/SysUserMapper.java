@@ -5,14 +5,18 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
-
-
 /**
  * @author ChenYXCoding
  * @create 2023-03-16 20:07
  */
 @Mapper
 public interface SysUserMapper  {
+
+    // 查找手机号
+    SysUser getPhoneNum(String phone);
+
+    // 根据微信的openId查询用户
+    SysUser getSysUserByOpenId(String openId);
 
     List<SysUser> page(@Param("sysUserQueryVo") SysUserQueryVo sysUserQueryVo);
 
@@ -42,6 +46,5 @@ public interface SysUserMapper  {
 
     // 根据用户名查询用户
     SysUser getUserEntityByUserName(@Param("username")String username);
-
 
 }

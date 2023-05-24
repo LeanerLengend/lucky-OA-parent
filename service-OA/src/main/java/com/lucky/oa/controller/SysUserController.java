@@ -6,10 +6,8 @@ import com.lucky.model.system.SysUser;
 import com.lucky.oa.service.SysUserService;
 import com.lucky.vo.system.AssginRoleVo;
 import com.lucky.vo.system.SysUserQueryVo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +18,16 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/admin/system/sysUser")
+@CrossOrigin
 public class SysUserController {
 
     @Resource
     private SysUserService sysUserService;
+
+    @GetMapping("/getCurrentUser")
+    public Result getCurrentUser() {
+        return Result.ok(sysUserService.getCurrentUser());
+    }
 
     @PreAuthorize("hasAuthority('bnt.sysUser.list')")
     @GetMapping("/querySysUser/{page}/{limit}")

@@ -1,6 +1,7 @@
 package com.lucky.common.jwt;
+
 import io.jsonwebtoken.*;
-import org.springframework.util.StringUtils;
+
 import java.util.Date;
 
 /**
@@ -31,10 +32,12 @@ public class JwtHelper {
     }
 
 
+
     // 生成token字符串，获取用户id
     public static Long getUserId(String token) {
         try {
-            if (StringUtils.isEmpty(token)) return null;
+
+            if(token.equals("") || token == null)return null;
 
             // 根据主体内容做一个内容解密
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token);
@@ -48,11 +51,10 @@ public class JwtHelper {
         }
     }
 
-
     // 生成token字符串，获取用户userName
     public static String getUsername(String token) {
         try {
-            if (StringUtils.isEmpty(token)) return "";
+            if(token.equals("") || token == null)return null;
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token);
             Claims claims = claimsJws.getBody();
             return (String) claims.get("username");
@@ -63,7 +65,7 @@ public class JwtHelper {
     }
 
     public static void main(String[] args) {
-        String token = JwtHelper.createToken(1L, "admin");
+        String token = JwtHelper.createToken(4L, "lisi");
         System.out.println(token);
         System.out.println(JwtHelper.getUserId(token));
         System.out.println(JwtHelper.getUsername(token));

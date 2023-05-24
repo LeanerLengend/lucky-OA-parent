@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lucky.oa.mapper.WeChatMenuMapper">
+
+<!--    // 根据parent_id 查询子节点-->
+<!--    List<Menu> getChildNode(@Param("id")Long id);-->
+    <select id="getChildNode" resultType="com.lucky.vo.wechat.MenuVo">
+        SELECT
+            *
+        FROM
+            wechat_menu
+        WHERE
+            parent_id = #{id}
+    </select>
+
+
+<!--    List<Menu> page();-->
+    <select id="list" resultType="com.lucky.vo.wechat.MenuVo">
+        SELECT * FROM wechat_menu
+    </select>
+
+<!--    // 根据id删除菜单-->
+<!--    Integer deleteMenuById(@Param("id")Long id);-->
+    <delete id="deleteMenuById" >
+        UPDATE
+            wechat_menu
+        SET
+            is_deleted = 1
+        WHERE
+            id = #{id}
+    </delete>
+
+<!--    // 根据id查询菜单项，单个-->
+<!--    Menu getMenuById(@Param("id")Long id);-->
+    <select id="getMenuById" resultType="menu">
+        SELECT * FROM wechat_menu WHERE id = #{id}
+    </select>
+
+<!--    Integer insertMenu(Menu menu);-->
+    <insert id="insertMenu" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+            wechat_menu(parent_id,`name`,type,url,meun_key,sort)
+        VALUES(#{parentId},#{name},#{type},#{url},#{meunKey},#{sort})
+    </insert>
+
+<!--    Integer updateMenu(Menu menu);-->
+    <update id="updateMenu">
+        UPDATE
+            wechat_menu
+        SET
+            parent_id = #{parentId},
+            `name` = #{name},
+            type = #{type},
+            url = #{url},
+            meun_key = #{meunKey},
+            sort = #{sort},
+            update_time = CURRENT_TIMESTAMP
+        WHERE
+            id = #{id}
+    </update>
+
+</mapper>

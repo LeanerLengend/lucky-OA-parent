@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lucky.oa.mapper.ProcessRecordMapper">
+
+<!--    // 新增记录条数-->
+<!--    void save(ProcessRecord processRecord);-->
+    <insert id="save" >
+        insert into
+            oa_process_record(process_id,description,status,operate_user_id,operate_user)
+        values(#{processId},#{description},#{status},#{operateUserId},#{operateUser})
+    </insert>
+
+<!--    // 根据id查询processRecord,processRecord可能有多个-->
+<!--    List<ProcessRecord> getProcessRecordByProcessId(Long id);-->
+    <select id="getProcessRecordByProcessId" resultType="processRecord">
+        select  * from oa_process_record where process_id = #{id}
+    </select>
+
+</mapper>
