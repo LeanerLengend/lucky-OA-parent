@@ -11,13 +11,6 @@ mybatis:
     map-underscore-to-camel-case: true
 
 # 微信公众号模式
-wechat:
-  mpAppId: xxxxxxxxxx
-  mpAppSecret: xxxxxxx
-  # 不是微信刻意规定的，用户点了同意之后，调用的接口地址
-  userInfoUrl: http://xxxxxxx/admin/wechat/userInfo
-  # '#' 传输有问题，所以用一个字符串来代替#
-  replaceStr: xxxxxx
 
 deploy:
   front: http://xxxxx:50998
